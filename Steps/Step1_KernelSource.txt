@@ -1,0 +1,54 @@
+Beaglebone Black (BBB) Kernel Headers & Source + Compile Driver Module
+
+Steps to compile a driver on the BBB.  Downloading the source and headers requires about 600Mb of free space.
+Before:
+
+root@beaglebone:/# uname -a && cat /etc/*release
+Linux beaglebone 3.8.13-bone50 #1 SMP Tue May 13 13:24:52 UTC 2014 armv7l
+GNU/Linux
+PRETTY_NAME="Debian GNU/Linux 7 (wheezy)"
+NAME="Debian GNU/Linux"
+VERSION_ID="7"
+VERSION="7 (wheezy)"
+ID=debian
+ANSI_COLOR="1;31"
+HOME_URL="http://www.debian.org/"
+SUPPORT_URL="http://www.debian.org/support/"
+BUG_REPORT_URL="http://bugs.debian.org/"
+
+
+
+Robert Nelson provides a handy script to do all the work. Backup copy is here:
+https://drive.google.com/file/d/0BwUGkFVOqZsPX21BdzVqcENxR2s/edit?usp=sharing
+
+wget https://raw.github.com/gkaindl/beaglebone-ubuntu-scripts/master/bb-get-rcn-kernel-source.sh
+chmod +x bb-get-rcn-kernel-source.sh
+sudo ./bb-get-rcn-kernel-source.sh
+
+
+
+Get the basic hello driver, and compile it
+
+wget www.linuxdevcenter.com/linux/2007/07/05/examples/hello_printk.tar.gz
+xzvf hello_printk.tar.gz
+cd hello_printk
+make
+
+
+
+Load the driver and check for kernel messages plus some other checks
+
+sudo insmod ./hello_printk.ko
+dmesg | tail
+lsmod
+modinfo hello_printk.ko
+
+
+
+Unload the driver and check the kernel messages
+
+sudo rmmod hello_printk
+dmesg | tail
+lsmod
+
+
