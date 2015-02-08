@@ -22,6 +22,10 @@ int spi_read_start_loop (int start){
      return retval;
 }
 
+int exit_spi_read (void){
+     exit_spi_read = 1;
+}
+
 void spi_read_thread (void *threadID){
 
      while(!exit_spi_read){
