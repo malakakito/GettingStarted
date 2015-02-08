@@ -4,16 +4,34 @@
 
 pthread_t thread1, thread2;
 pthread_mutex_t spi_read_mutex     = PTHREAD_MUTEX_INITIALIZER;
-pthread_cond_t  condition_var   = PTHREAD_COND_INITIALIZER;
+pthread_cond_t  spi_read_cond   = PTHREAD_COND_INITIALIZER;
 
 int exit_spi_read = 0;
+int spi_read_loop = 0;
+
+int spi_read_start_loop (int start){
+     int retval = 0;
+     if (start){
+          spi_read_loop = 1;
+          retval = pthread_cond_broadcast (&spi_read_cond);
+     }
+     else {
+          spi_read_loop = 0;
+          retval = 0;
+     }
+     return retval;
+}
 
 void spi_read_thread (void *threadID){
 
-     while (!exit_spi_read){
+     while(!exit_spi_read){
+          pthread_mutex_lock( &spi_read_mutex );
+          while (!spi_read_loop){
+               pthread_cond_wait (&spi_read_cond, &spi_read_mutex);
+          }
           
+          pthread_mutex_unlock( &count_mutex );
      }
-
 }
 
 int init_spi_read (unsigned int buffer_size){
